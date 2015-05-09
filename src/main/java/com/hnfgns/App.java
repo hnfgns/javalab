@@ -33,6 +33,7 @@ public class App {
       freeFrom = Integer.valueOf(args[3]);
       freeUntil = Integer.valueOf(args[4]);
     } catch (Exception e) {
+      logger.error("error while parsing params. using defaults", e);
       numChunks = DEFAULT_NUM_CHUNKS;
       chunkSize = DEFAULT_CHUNK_SIZE;
       freeFrom = DEFAULT_FREE_FROM;
