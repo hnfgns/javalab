@@ -43,6 +43,7 @@ public class App {
 
     Thread.sleep(INIT_SLEEP);
 
+    int curNumChunks = numChunks;
     for (;;) {
       final long maxDirectMemory = VM.maxDirectMemory();
       logger.info("Max direct memory is {}", maxDirectMemory);
@@ -54,12 +55,14 @@ public class App {
 
       {
         logger.info("Allocating {} chunks of size {} netting {} bytes", numChunks, chunkSize, numChunks * chunkSize);
-        final ByteBuffer[] buffers = allocateChunks(numChunks, chunkSize);
+        final ByteBuffer[] buffers = allocateChunks(curNumChunks--, chunkSize);
         Thread.sleep(POST_ALLOC_SLEEP);
         logger.info("De-allocating {} chunks from {}", Math.max(freeUntil - freeFrom, 0), freeFrom);
         for (int i = freeFrom; i < freeUntil; i++) {
           free(buffers[i]);
         }
+        logger.info("JVM total: {}; free: {}, max: {} bytes", Runtime.getRuntime().totalMemory(),
+            Runtime.getRuntime().freeMemory(), Runtime.getRuntime().maxMemory());
       }
 
       Thread.sleep(POST_FREE_SLEEP);
