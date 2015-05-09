@@ -28,10 +28,10 @@ public class App {
     int freeUntil;
 
     try {
-      numChunks = Integer.valueOf(args[1]);
-      chunkSize = Integer.valueOf(args[2]);
-      freeFrom = Integer.valueOf(args[3]);
-      freeUntil = Integer.valueOf(args[4]);
+      numChunks = Integer.valueOf(args[0]);
+      chunkSize = Integer.valueOf(args[1]);
+      freeFrom = Integer.valueOf(args[2]);
+      freeUntil = Integer.valueOf(args[3]);
     } catch (Exception e) {
       logger.error("error while parsing params. using defaults", e);
       numChunks = DEFAULT_NUM_CHUNKS;
