@@ -70,6 +70,7 @@ public class App {
 
         Thread.sleep(POST_ALLOC_SLEEP);
 
+        logger.info("De-allocating {} chunks from {}", Math.max(buffers.length - freeUntil, 0), freeUntil);
         for (int i=freeUntil; i<buffers.length;i++) {
           free(buffers[i]);
         }
