@@ -38,7 +38,6 @@ public class App {
     final long maxDirectMemory = VM.maxDirectMemory();
     logger.info("Max direct memory is {}", maxDirectMemory);
 
-    logger.info("Allocation {} chunks of size {} netting {} bytes", numChunks, chunkSize, numChunks*chunkSize);
     final int totalDirectMemoryRequired = numChunks * chunkSize;
     if (totalDirectMemoryRequired > maxDirectMemory) {
       logger.warn("Increase direct memory at least {} bytes", totalDirectMemoryRequired-maxDirectMemory);
@@ -47,6 +46,7 @@ public class App {
     Thread.sleep(PRE_ALLOC_SLEEP);
 
     {
+      logger.info("Allocating {} chunks of size {} netting {} bytes", numChunks, chunkSize, numChunks*chunkSize);
       final ByteBuffer[] buffers = allocateChunks(numChunks, chunkSize);
       Thread.sleep(POST_ALLOC_SLEEP);
       logger.info("De-allocating {} chunks from {}", Math.max(buffers.length - freeFrom, 0), freeFrom);
