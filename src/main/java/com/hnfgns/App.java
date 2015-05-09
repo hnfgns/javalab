@@ -17,7 +17,7 @@ public class App {
   final static int DEFAULT_CHUNK_SIZE = 16 * 1024 * 1024; // 16M
   final static int DEFAULT_NUM_CHUNKS = 100;
   final static int DEFAULT_FREE_FROM = 5;
-  final static int PRE_ALLOC_SLEEP = 20 * 1000; // 20 secs
+  final static int INIT_SLEEP = 20 * 1000; // 20 secs
   final static int POST_ALLOC_SLEEP = 20 * 1000; // 20 secs
   final static int POST_FREE_SLEEP = 20 * 1000; // 20 secs
 
@@ -41,6 +41,8 @@ public class App {
     }
     logger.info("numChunks: {} chunkSize: {} freeFrom: {} freeUntil: {}", numChunks, chunkSize, freeFrom, freeUntil);
 
+    Thread.sleep(INIT_SLEEP);
+
     for (;;) {
       final long maxDirectMemory = VM.maxDirectMemory();
       logger.info("Max direct memory is {}", maxDirectMemory);
@@ -49,8 +51,6 @@ public class App {
       if (totalDirectMemoryRequired > maxDirectMemory) {
         logger.warn("Increase direct memory at least {} bytes", totalDirectMemoryRequired - maxDirectMemory);
       }
-
-      Thread.sleep(PRE_ALLOC_SLEEP);
 
       {
         logger.info("Allocating {} chunks of size {} netting {} bytes", numChunks, chunkSize, numChunks * chunkSize);
