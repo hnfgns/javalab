@@ -55,7 +55,7 @@ public class App {
       }
 
       {
-        logger.info("Allocating {} chunks of size {} netting {} bytes", numChunks, chunkSize, numChunks * chunkSize);
+        logger.info("Allocating {} chunks of size {} netting {} bytes", curNumChunks, chunkSize, numChunks * chunkSize);
         final ByteBuffer[] buffers = allocateChunks(curNumChunks--, chunkSize);
         Thread.sleep(POST_ALLOC_SLEEP);
         final int curUntil = curFreeUntil--;
