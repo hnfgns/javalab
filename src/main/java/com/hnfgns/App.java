@@ -2,6 +2,9 @@ package com.hnfgns;
 
 import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ScheduledExecutorService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +46,7 @@ public class App {
 
     Thread.sleep(INIT_SLEEP);
 
+//    final List<ByteBuffer> used = new CopyOnWriteArrayList<ByteBuffer>();
     for (;;) {
       final long maxDirectMemory = VM.maxDirectMemory();
       logger.info("Max direct memory is {}", maxDirectMemory);
@@ -60,6 +64,16 @@ public class App {
         for (int i = freeFrom; i < freeUntil; i++) {
           free(buffers[i]);
         }
+
+        logger.info("JVM total: {}; free: {} bytes", Runtime.getRuntime().totalMemory(),
+            Runtime.getRuntime().freeMemory(), Runtime.getRuntime().maxMemory());
+
+        Thread.sleep(POST_ALLOC_SLEEP);
+
+        for (int i=freeUntil; i<buffers.length;i++) {
+          free(buffers[i]);
+        }
+
         logger.info("JVM total: {}; free: {} bytes", Runtime.getRuntime().totalMemory(),
             Runtime.getRuntime().freeMemory(), Runtime.getRuntime().maxMemory());
       }
