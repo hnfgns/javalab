@@ -25,16 +25,21 @@ public class App {
     int numChunks;
     int chunkSize;
     int freeFrom;
+    int freeUntil;
 
     try {
       numChunks = Integer.valueOf(args[1]);
       chunkSize = Integer.valueOf(args[2]);
       freeFrom = Integer.valueOf(args[3]);
+      freeUntil = Integer.valueOf(args[4]);
     } catch (Exception e) {
       numChunks = DEFAULT_NUM_CHUNKS;
       chunkSize = DEFAULT_CHUNK_SIZE;
       freeFrom = DEFAULT_FREE_FROM;
+      freeUntil = numChunks;
     }
+    logger.info("numChunks: {} chunkSize: {} freeFrom: {} freeUntil: {}", numChunks, chunkSize, freeFrom, freeUntil);
+
     for (;;) {
       final long maxDirectMemory = VM.maxDirectMemory();
       logger.info("Max direct memory is {}", maxDirectMemory);
@@ -51,7 +56,7 @@ public class App {
         final ByteBuffer[] buffers = allocateChunks(numChunks, chunkSize);
         Thread.sleep(POST_ALLOC_SLEEP);
         logger.info("De-allocating {} chunks from {}", Math.max(buffers.length - freeFrom, 0), freeFrom);
-        for (int i = freeFrom; i < buffers.length - 5; i++) {
+        for (int i = freeFrom; i < freeUntil; i++) {
           free(buffers[i]);
         }
       }
