@@ -56,7 +56,7 @@ public class App {
         logger.info("Allocating {} chunks of size {} netting {} bytes", numChunks, chunkSize, numChunks * chunkSize);
         final ByteBuffer[] buffers = allocateChunks(numChunks, chunkSize);
         Thread.sleep(POST_ALLOC_SLEEP);
-        logger.info("De-allocating {} chunks from {}", Math.max(buffers.length - freeFrom, 0), freeFrom);
+        logger.info("De-allocating {} chunks from {}", Math.max(freeUntil - freeFrom, 0), freeFrom);
         for (int i = freeFrom; i < freeUntil; i++) {
           free(buffers[i]);
         }
