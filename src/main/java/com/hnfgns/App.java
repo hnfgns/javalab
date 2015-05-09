@@ -19,7 +19,7 @@ public class App {
   final static int DEFAULT_FREE_FROM = 5;
   final static int PRE_ALLOC_SLEEP = 20 * 1000; // 20 secs
   final static int POST_ALLOC_SLEEP = 20 * 1000; // 20 secs
-  final static int POST_FREE_SLEEP = 120 * 1000; // 120 secs
+  final static int POST_FREE_SLEEP = 20 * 1000; // 20 secs
 
   public static void main(String[] args)  throws Exception {
     int numChunks;
@@ -35,27 +35,29 @@ public class App {
       chunkSize = DEFAULT_CHUNK_SIZE;
       freeFrom = DEFAULT_FREE_FROM;
     }
-    final long maxDirectMemory = VM.maxDirectMemory();
-    logger.info("Max direct memory is {}", maxDirectMemory);
+    for (;;) {
+      final long maxDirectMemory = VM.maxDirectMemory();
+      logger.info("Max direct memory is {}", maxDirectMemory);
 
-    final int totalDirectMemoryRequired = numChunks * chunkSize;
-    if (totalDirectMemoryRequired > maxDirectMemory) {
-      logger.warn("Increase direct memory at least {} bytes", totalDirectMemoryRequired-maxDirectMemory);
-    }
-
-    Thread.sleep(PRE_ALLOC_SLEEP);
-
-    {
-      logger.info("Allocating {} chunks of size {} netting {} bytes", numChunks, chunkSize, numChunks*chunkSize);
-      final ByteBuffer[] buffers = allocateChunks(numChunks, chunkSize);
-      Thread.sleep(POST_ALLOC_SLEEP);
-      logger.info("De-allocating {} chunks from {}", Math.max(buffers.length - freeFrom, 0), freeFrom);
-      for (int i = freeFrom; i < buffers.length-5; i++) {
-        free(buffers[i]);
+      final int totalDirectMemoryRequired = numChunks * chunkSize;
+      if (totalDirectMemoryRequired > maxDirectMemory) {
+        logger.warn("Increase direct memory at least {} bytes", totalDirectMemoryRequired - maxDirectMemory);
       }
-    }
 
-    Thread.sleep(POST_FREE_SLEEP);
+      Thread.sleep(PRE_ALLOC_SLEEP);
+
+      {
+        logger.info("Allocating {} chunks of size {} netting {} bytes", numChunks, chunkSize, numChunks * chunkSize);
+        final ByteBuffer[] buffers = allocateChunks(numChunks, chunkSize);
+        Thread.sleep(POST_ALLOC_SLEEP);
+        logger.info("De-allocating {} chunks from {}", Math.max(buffers.length - freeFrom, 0), freeFrom);
+        for (int i = freeFrom; i < buffers.length - 5; i++) {
+          free(buffers[i]);
+        }
+      }
+
+      Thread.sleep(POST_FREE_SLEEP);
+    }
   }
 
   private static void free(ByteBuffer buffer) throws Exception {
