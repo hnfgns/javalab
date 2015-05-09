@@ -18,8 +18,8 @@ public class App {
   final static int DEFAULT_NUM_CHUNKS = 100;
   final static int DEFAULT_FREE_FROM = 5;
   final static int INIT_SLEEP = 20 * 1000; // 20 secs
-  final static int POST_ALLOC_SLEEP = 20 * 1000; // 20 secs
-  final static int POST_FREE_SLEEP = 20 * 1000; // 20 secs
+  final static int POST_ALLOC_SLEEP = 10 * 1000; // 20 secs
+  final static int POST_FREE_SLEEP = 10 * 1000; // 20 secs
 
   public static void main(String[] args)  throws Exception {
     int numChunks;
